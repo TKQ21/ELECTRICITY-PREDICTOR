@@ -4,6 +4,7 @@ import StarBackground from "@/components/StarBackground";
 import CSVPredictor from "@/components/CSVPredictor";
 import CountryExplorer from "@/components/CountryExplorer";
 import AreaPredictor from "@/components/AreaPredictor";
+import ComparisonSheet from "@/components/ComparisonSheet";
 
 const Index = () => {
   return (
@@ -53,6 +54,7 @@ const Index = () => {
       <main className="relative z-10 max-w-6xl mx-auto px-4 pb-20 space-y-10">
         <CSVPredictor />
         <CountryExplorer />
+        <ComparisonSheet />
         <AreaPredictor />
       </main>
 
