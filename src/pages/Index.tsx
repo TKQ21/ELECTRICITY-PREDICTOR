@@ -5,6 +5,7 @@ import CSVPredictor from "@/components/CSVPredictor";
 import CountryExplorer from "@/components/CountryExplorer";
 import AreaPredictor from "@/components/AreaPredictor";
 import ComparisonSheet from "@/components/ComparisonSheet";
+import { countriesData } from "@/data/countryData";
 
 const Index = () => {
   return (
@@ -32,7 +33,7 @@ const Index = () => {
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             {[
               { icon: <BarChart3 className="w-4 h-4" />, text: "30-Day Forecast" },
-              { icon: <Globe className="w-4 h-4" />, text: "10+ Countries" },
+              { icon: <Globe className="w-4 h-4" />, text: `${countriesData.length} Countries` },
               { icon: <Download className="w-4 h-4" />, text: "CSV Download" },
               { icon: <Zap className="w-4 h-4" />, text: "Real-time Data" },
             ].map((item, i) => (
