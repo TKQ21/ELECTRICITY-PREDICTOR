@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpDown, Download, Search, TrendingUp, BarChart3 } from "lucide-react";
-import { countriesData } from "@/data/countryData";
+import { countriesData, getCountryGrowthRate, getProjectedDemand } from "@/data/countryData";
 
 type SortKey = "name" | "population" | "demand" | "avgKwh" | "futureDemand";
 type SortDir = "asc" | "desc";
@@ -40,7 +40,7 @@ const ComparisonSheet = () => {
         case "population": va = a.population; vb = b.population; break;
         case "demand": va = a.totalDemandGwhMonth; vb = b.totalDemandGwhMonth; break;
         case "avgKwh": va = a.avgKwhPerHousehold; vb = b.avgKwhPerHousehold; break;
-        case "futureDemand": va = Math.round(a.totalDemandGwhMonth * 1.22); vb = Math.round(b.totalDemandGwhMonth * 1.22); break;
+        case "futureDemand": va = getProjectedDemand(a.totalDemandGwhMonth, a.code); vb = getProjectedDemand(b.totalDemandGwhMonth, b.code); break;
         default: va = 0; vb = 0;
       }
       return sortDir === "asc" ? va - vb : vb - va;
@@ -60,7 +60,7 @@ const ComparisonSheet = () => {
       c.population,
       c.totalDemandGwhMonth,
       c.avgKwhPerHousehold,
-      Math.round(c.totalDemandGwhMonth * 1.22),
+      Math.round(c.totalDemandGwhMonth * (1 + getCountryGrowthRate(c.code) / 100)),
       ...displaySources.map(s => c.sources[s] || 0),
     ]);
     const csv = [header.join(","), ...rows.map(r => r.join(","))].join("\n");
@@ -157,8 +157,8 @@ const ComparisonSheet = () => {
             </thead>
             <tbody>
               {sorted.map((c, idx) => {
-                const future = Math.round(c.totalDemandGwhMonth * 1.22);
-                const growth = ((future - c.totalDemandGwhMonth) / c.totalDemandGwhMonth * 100).toFixed(0);
+                const future = getProjectedDemand(c.totalDemandGwhMonth, c.code);
+                const growth = getCountryGrowthRate(c.code);
                 return (
                   <tr
                     key={c.code}
