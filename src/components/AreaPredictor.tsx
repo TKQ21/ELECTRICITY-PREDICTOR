@@ -6,6 +6,45 @@ import { calculateAreaDemand, defaultSectorModel, countriesData, calculateConfid
 
 const SECTOR_COLORS = ["hsl(185, 100%, 50%)", "hsl(150, 100%, 45%)", "hsl(45, 100%, 55%)", "hsl(25, 100%, 55%)", "hsl(330, 100%, 60%)"];
 
+const neonTooltipStyle = {
+  background: "hsl(230, 40%, 12%)",
+  border: "1px solid hsl(185, 100%, 50%)",
+  borderRadius: 10,
+  boxShadow: "0 0 15px hsl(185, 100%, 50%, 0.3), 0 0 30px hsl(185, 100%, 50%, 0.1)",
+  padding: "10px 14px",
+};
+
+const NeonBarTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{ ...neonTooltipStyle, borderColor: "hsl(330, 100%, 60%)", boxShadow: "0 0 15px hsl(330, 100%, 60%, 0.3)" }}>
+      {label && <div className="text-xs font-display text-neon-pink mb-1">{label}</div>}
+      {payload.map((p: any, i: number) => (
+        <div key={i} className="flex items-center gap-2 text-sm font-body">
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color || p.fill }} />
+          <span className="text-neon-yellow/80">GWh/mo:</span>
+          <span className="font-display text-neon-green">{typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const NeonPieTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{ ...neonTooltipStyle, borderColor: "hsl(45, 100%, 55%)", boxShadow: "0 0 15px hsl(45, 100%, 55%, 0.3)" }}>
+      {payload.map((p: any, i: number) => (
+        <div key={i} className="flex items-center gap-2 text-sm font-body">
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.payload?.fill || p.color }} />
+          <span className="text-neon-cyan/80">{p.name}:</span>
+          <span className="font-display text-neon-orange">{typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const AreaPredictor = () => {
   const [households, setHouseholds] = useState("");
   const [avgKwh, setAvgKwh] = useState("");
@@ -107,14 +146,14 @@ const AreaPredictor = () => {
         {result && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8 space-y-6">
             {/* Scenario Toggle */}
-            <div className="bg-muted rounded-xl p-4">
+            <div className="bg-card rounded-xl p-4 border-2 border-neon-skyblue/20">
               <h3 className="font-display text-sm text-neon-skyblue mb-3 flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4" /> Scenario Toggle (What-If Analysis)
               </h3>
               <div className="flex flex-wrap gap-2">
                 {(Object.keys(scenarios) as ScenarioKey[]).map(key => (
                   <button key={key} onClick={() => setActiveScenario(key)}
-                    className={`px-3 py-2 rounded-lg text-xs font-body transition-all ${activeScenario === key ? "bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50 shadow-[0_0_10px_hsl(185,100%,50%,0.2)]" : "border border-border text-muted-foreground hover:border-neon-cyan/30"}`}>
+                    className={`px-3 py-2 rounded-lg text-xs font-body transition-all ${activeScenario === key ? "bg-neon-cyan/10 text-neon-cyan border-2 border-neon-cyan/50 shadow-[0_0_10px_hsl(185,100%,50%,0.2)]" : "border border-border text-muted-foreground hover:border-neon-cyan/30"}`}>
                     {scenarios[key].label}
                     <div className="text-[9px] text-muted-foreground mt-0.5">{scenarios[key].description}</div>
                   </button>
@@ -122,8 +161,8 @@ const AreaPredictor = () => {
               </div>
             </div>
 
-            {/* Total Demand with Confidence Range */}
-            <div className="text-center">
+            {/* Total Demand */}
+            <div className="text-center p-6 bg-card rounded-xl border-2 border-neon-purple/20">
               <div className="text-sm text-muted-foreground font-body">Total Area Electricity Demand {activeScenario !== "normal" && `(${scenarios[activeScenario].label})`}</div>
               <div className="text-4xl font-display neon-gradient-text">{scenarioMultiplied.toFixed(2)} GWh/month</div>
               {confidenceRange && (
@@ -138,7 +177,7 @@ const AreaPredictor = () => {
             </div>
 
             {/* Assumptions Panel */}
-            <div className="bg-muted rounded-xl p-4">
+            <div className="bg-card rounded-xl p-4 border-2 border-neon-green/20">
               <button onClick={() => setShowAssumptions(!showAssumptions)} className="w-full flex items-center gap-2 text-sm font-display text-neon-green">
                 <Info className="w-4 h-4" /> Assumptions & Methodology
                 <span className="ml-auto text-xs text-muted-foreground">{showAssumptions ? "▲ Hide" : "▼ Show"}</span>
@@ -152,7 +191,7 @@ const AreaPredictor = () => {
                     { label: "Urban vs Rural Factor", value: assumptions.urbanRuralFactor },
                     { label: "Reference Year", value: assumptions.referenceYear },
                   ].map(item => (
-                    <div key={item.label} className="flex justify-between items-center text-xs font-body py-1 border-b border-border/30">
+                    <div key={item.label} className="flex justify-between items-center text-xs font-body py-1 border-b border-neon-darkblue/20">
                       <span className="text-muted-foreground">{item.label}</span>
                       <span className="text-neon-cyan">{item.value}</span>
                     </div>
@@ -164,35 +203,35 @@ const AreaPredictor = () => {
 
             {/* Sector Breakdown Charts */}
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-muted rounded-xl p-4">
+              <div className="bg-card rounded-xl p-4 border-2 border-neon-pink/20">
                 <h3 className="font-display text-sm text-neon-pink mb-3">Sector Breakdown (GWh/month)</h3>
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={sectorData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(185, 80%, 20%)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(230, 40%, 20%)" />
                     <XAxis dataKey="name" tick={{ fill: "hsl(185, 40%, 55%)", fontSize: 11 }} />
                     <YAxis tick={{ fill: "hsl(185, 40%, 55%)", fontSize: 12 }} />
-                    <Tooltip contentStyle={{ background: "hsl(220, 20%, 7%)", border: "1px solid hsl(330, 100%, 60%)", borderRadius: 8, color: "hsl(330, 100%, 60%)" }} />
+                    <Tooltip content={<NeonBarTooltip />} />
                     <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                       {sectorData.map((_, i) => (<Cell key={i} fill={SECTOR_COLORS[i % SECTOR_COLORS.length]} />))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <div className="bg-muted rounded-xl p-4">
+              <div className="bg-card rounded-xl p-4 border-2 border-neon-yellow/20">
                 <h3 className="font-display text-sm text-neon-yellow mb-3">Sector Distribution</h3>
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie data={sectorData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, value }) => `${name}: ${value}`}>
                       {sectorData.map((_, i) => (<Cell key={i} fill={SECTOR_COLORS[i % SECTOR_COLORS.length]} />))}
                     </Pie>
-                    <Tooltip contentStyle={{ background: "hsl(220, 20%, 7%)", border: "1px solid hsl(45, 100%, 55%)", borderRadius: 8, color: "hsl(45, 100%, 55%)" }} />
+                    <Tooltip content={<NeonPieTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             {/* Disclaimer */}
-            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+            <div className="p-3 rounded-lg bg-muted/50 border border-neon-purple/20">
               <p className="text-xs text-muted-foreground font-body italic text-center">
                 ⚠️ All figures are model-based estimates derived from household consumption and standard sectoral ratios. Actual demand may vary based on real-time usage, weather, and policy factors.
               </p>
