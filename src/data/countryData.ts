@@ -1815,3 +1815,47 @@ export function peakStress(peak: number, average: number): { label: string; colo
 export function urbanImpact(isUrban: boolean): number {
   return isUrban ? 1.15 : 0.95;
 }
+
+// Country-specific 5-year (2026→2031) electricity demand growth rates (%)
+// Based on GDP growth, industrialization, electrification, and EV adoption trends
+export const countryGrowthRates: Record<string, number> = {
+  // Asia
+  IN: 38, CN: 18, JP: 5, KR: 8, ID: 32, PK: 28, BD: 35, TH: 14, VN: 40, PH: 25,
+  MY: 15, SG: 8, TW: 7, MM: 30, KH: 42, LA: 38, MN: 20, NP: 35, LK: 22, BN: 6,
+  BT: 30, MV: 18, TL: 45, AF: 25, UZ: 22, KZ: 18, TM: 15, KG: 20, TJ: 25,
+  // Middle East
+  SA: 12, AE: 10, QA: 8, KW: 7, BH: 9, OM: 11, IQ: 28, IR: 15, JO: 14, LB: 20,
+  SY: 35, YE: 30, IL: 10, PS: 22,
+  // Europe (mature markets, slower growth)
+  GB: 6, FR: 5, DE: 4, IT: 3, ES: 5, PT: 6, NL: 5, BE: 4, AT: 4, CH: 3,
+  SE: 8, NO: 7, DK: 6, FI: 5, IE: 7, PL: 10, CZ: 6, RO: 12, HU: 8, BG: 10,
+  HR: 8, SK: 7, SI: 5, RS: 12, BA: 10, ME: 12, MK: 11, AL: 15, XK: 18,
+  UA: 15, BY: 8, MD: 14, LT: 9, LV: 8, EE: 7, GR: 6, CY: 8, MT: 7,
+  IS: 5, LU: 4, LI: 3, MC: 3, AD: 4, SM: 3, VA: 2,
+  // Russia & CIS
+  RU: 8, GE: 14, AM: 12, AZ: 15,
+  // Africa (high growth, electrification drive)
+  NG: 35, ZA: 10, EG: 18, KE: 30, ET: 45, GH: 28, TZ: 35, UG: 38, RW: 40,
+  SN: 30, CI: 25, CM: 22, AO: 20, MZ: 32, ZW: 18, ZM: 25, MW: 35, MG: 28,
+  ML: 30, BF: 32, NE: 28, TD: 25, CD: 30, CG: 22, GA: 15, GQ: 18, CF: 25,
+  BJ: 28, TG: 26, SL: 35, LR: 30, GN: 28, GW: 25, GM: 22, CV: 18, ST: 20,
+  KM: 22, MU: 12, SC: 10, DJ: 25, ER: 30, SS: 40, SO: 35, BI: 38, LS: 20,
+  SZ: 15, BW: 12, NA: 14, LY: 18, TN: 12, DZ: 14, MA: 15, MR: 22,
+  // Americas
+  US: 8, CA: 6, MX: 14, BR: 12, AR: 10, CO: 15, CL: 10, PE: 18, VE: 8,
+  EC: 16, BO: 18, PY: 15, UY: 7, GY: 35, SR: 12, CU: 10, HT: 28, DO: 14,
+  JM: 12, TT: 8, BS: 10, BB: 8, BZ: 15, GT: 20, HN: 22, SV: 15, NI: 25,
+  CR: 10, PA: 14,
+  // Oceania
+  AU: 8, NZ: 6, FJ: 15, PG: 28, WS: 12, TO: 10, VU: 18, SB: 22, KI: 15,
+  MH: 12, FM: 14, PW: 10, NR: 8, TV: 10,
+};
+
+export function getCountryGrowthRate(code: string): number {
+  return countryGrowthRates[code] ?? 15; // default 15% if not found
+}
+
+export function getProjectedDemand(currentDemand: number, code: string): number {
+  const rate = getCountryGrowthRate(code);
+  return Math.round(currentDemand * (1 + rate / 100));
+}
