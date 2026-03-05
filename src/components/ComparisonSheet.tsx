@@ -140,7 +140,7 @@ const ComparisonSheet = () => {
         <div className="flex flex-wrap gap-3 mb-4">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} className="neon-input w-full pl-12 text-sm" />
+            <input type="text" placeholder="Search country..." value={search} onChange={e => setSearch(e.target.value)} className="neon-input w-full pl-9 text-sm" />
           </div>
           <button onClick={downloadCSV} className="neon-button flex items-center gap-2 text-sm px-4 py-2">
             <Download className="w-4 h-4" /> Download CSV
