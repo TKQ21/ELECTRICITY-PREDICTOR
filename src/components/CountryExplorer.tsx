@@ -113,7 +113,7 @@ const CountryExplorer = () => {
             placeholder="Search by country name, code, or state... (e.g. India, US, California, Tokyo)"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="neon-input w-full pl-10 text-sm"
+            className="neon-input w-full pl-12 text-sm"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-neon-cyan text-xs font-body">
