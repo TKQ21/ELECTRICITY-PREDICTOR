@@ -60,9 +60,15 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 text-center py-8 border-t border-border">
+      <footer className="relative z-10 text-center py-8 border-t border-border space-y-2">
         <p className="text-sm text-muted-foreground font-body">
           ⚡ ElectriPredict — Electricity Demand Forecasting System
+        </p>
+        <p className="text-xs text-muted-foreground font-body">
+          © 2026 Mohd Kaif
+        </p>
+        <p className="text-xs text-muted-foreground/60 font-body">
+          Built with AI assistance
         </p>
       </footer>
     </div>
