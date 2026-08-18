@@ -85,6 +85,10 @@ const CSVPredictor = () => {
         <p className="text-muted-foreground font-body mb-4">
           Upload your electricity consumption CSV (columns: Date, Consumption_kWh) → Get 30-day AI forecast
         </p>
+        <p className="text-xs text-neon-yellow/80 font-body mb-4">
+          Estimate only — this quick view uses a trend + weekday-pattern heuristic, not a trained model. For trained models with
+          measured MAE / RMSE / R² / MAPE, use the ML Lab section below.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <input ref={fileRef} type="file" accept=".csv,.xlsx" onChange={handleFileUpload} className="hidden" />
