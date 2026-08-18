@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Zap, Globe, BarChart3, Download } from "lucide-react";
 import StarBackground from "@/components/StarBackground";
 import CSVPredictor from "@/components/CSVPredictor";
+import MLLab from "@/components/MLLab";
 import CountryExplorer from "@/components/CountryExplorer";
 import AreaPredictor from "@/components/AreaPredictor";
 import ComparisonSheet from "@/components/ComparisonSheet";
@@ -54,6 +55,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="relative z-10 max-w-6xl mx-auto px-4 pb-20 space-y-10">
         <CSVPredictor />
+        <MLLab />
         <CountryExplorer />
         <ComparisonSheet />
         <AreaPredictor />
