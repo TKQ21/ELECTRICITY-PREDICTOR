@@ -199,3 +199,48 @@ Mohd Kaif
 AI & Data Analytics Projects Portfolio
 
 Built with AI assistance using modern web and data tools.
+
+---
+
+# 🧪 Local setup — ML Lab (FastAPI backend + frontend)
+
+All model training runs in the Python backend. Nothing is trained in the browser.
+
+**1. Install Python dependencies**
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+**2. Start FastAPI**
+
+```bash
+uvicorn main:app --reload --port 8000
+# optional MLflow UI: mlflow ui   -> http://localhost:5000
+```
+
+**3. Configure the API URL**
+
+```bash
+cp .env.example .env          # VITE_ML_API_URL=http://localhost:8000
+```
+
+**4. Start the frontend**
+
+```bash
+npm install
+npm run dev
+```
+
+**5. Use the ML Lab**
+
+- Open the app, scroll to **ML Lab — Model Training & Comparison**
+- The header shows `ML backend online …`, or `ML backend is not running` if FastAPI is down
+- Click **Upload historical CSV** and pick your electricity dataset (`Date, Consumption_kWh`)
+- Click **Run model comparison** — the CSV is POSTed to `/api/ml/train`, and the UI polls
+  `/api/ml/status/{job_id}` through: Uploading dataset → Cleaning data → Feature engineering →
+  Training models → Comparing models → Selecting best model → Complete
+- On completion the results from `/api/ml/result/{job_id}` render: comparison table
+  (MAE / MSE / RMSE / R² / MAPE), best model by validation RMSE, actual vs predicted,
+  feature importance, 30-step forecast, and the MLflow run/registry history from `/api/ml/runs`
