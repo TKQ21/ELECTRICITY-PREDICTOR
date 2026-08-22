@@ -104,6 +104,8 @@ def clean(df: pd.DataFrame, rep: SchemaReport) -> pd.DataFrame:
     n_before = len(d)
     d = d.groupby("date", as_index=False, sort=True)["value"].mean()
     rep.duplicateDates = int(n_before - len(d))
+    rep.usableRows = int(len(d))  # recorded early so a later failure still reports real counts
+
 
     # robust winsorising via MAD (copy -> guaranteed writable, pandas-backed views are read-only)
     v = d["value"].to_numpy()
