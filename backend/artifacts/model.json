@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "run_id": "run-0f1530bd88",
+  "registered_version": null,
+  "created_at": "2026-08-22T00:10:26.729054+00:00",
+  "dataset": {
+    "date_column": "Date",
+    "target_column": "Consumption_kWh",
+    "usable_rows": 800,
+    "median_gap_days": 1.0
+  },
+  "preprocessing": {
+    "steps": [
+      "drop_missing",
+      "coerce_numeric",
+      "sort_by_date",
+      "merge_duplicate_timestamps",
+      "winsorize_mad_8",
+      "lag_and_calendar_features",
+      "delta_vs_lag1_target"
+    ],
+    "features": [
+      "lag_1",
+      "lag_2",
+      "lag_3",
+      "lag_7",
+      "lag_14",
+      "roll_mean_7",
+      "roll_std_7",
+      "roll_mean_14",
+      "diff_1",
+      "dow_sin",
+      "dow_cos",
+      "is_weekend",
+      "month_sin",
+      "month_cos",
+      "doy_sin",
+      "doy_cos"
+    ]
+  },
+  "model": {
+    "name": "Ridge Regression",
+    "family": "linear",
+    "params": {
+      "alpha": 1.0,
+      "copy_X": true,
+      "fit_intercept": true,
+      "max_iter": null,
+      "positive": false,
+      "random_state": null,
+      "solver": "auto",
+      "tol": 0.0001
+    }
+  },
+  "metrics": {
+    "validation": {
+      "mae": 66.60057133079594,
+      "mse": 6933.170769638995,
+      "rmse": 83.26566380951391,
+      "r2": 0.47480854034440856,
+      "mape": 1.7377094667436563
+    },
+    "test": {
+      "mae": 66.36908219818376,
+      "mse": 7289.581341483654,
+      "rmse": 85.37904509587615,
+      "r2": 0.8588314978599377,
+      "mape": 1.5352287844896808
+    },
+    "naive_baseline_test": {
+      "mae": 111.40213299612714,
+      "mse": 20066.142734601457,
+      "rmse": 141.65501309378874,
+      "r2": 0.6114032917841291,
+      "mape": 2.573963487320579
+    }
+  },
+  "split": {
+    "train": 552,
+    "val": 117,
+    "test": 117
+  }
+}
