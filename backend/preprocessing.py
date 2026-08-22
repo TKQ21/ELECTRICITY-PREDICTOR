@@ -105,8 +105,9 @@ def clean(df: pd.DataFrame, rep: SchemaReport) -> pd.DataFrame:
     d = d.groupby("date", as_index=False, sort=True)["value"].mean()
     rep.duplicateDates = int(n_before - len(d))
 
-    # robust winsorising via MAD
+    # robust winsorising via MAD (copy -> guaranteed writable, pandas-backed views are read-only)
     v = d["value"].to_numpy()
+    v = np.asarray(v, dtype="float64").copy()
     med = float(np.median(v)) if v.size else 0.0
     mad = float(np.median(np.abs(v - med))) if v.size else 0.0
     if mad > 0:
@@ -120,6 +121,7 @@ def clean(df: pd.DataFrame, rep: SchemaReport) -> pd.DataFrame:
     gaps = d["date"].diff().dt.total_seconds().to_numpy()[1:] / 86400.0
     rep.medianGapDays = float(np.median(gaps)) if gaps.size else float("nan")
     rep.usableRows = int(len(d))
+
 
     if rep.usableRows < 60:
         rep.warnings.append(
